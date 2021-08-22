@@ -1,47 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fluttermobx/controller.dart';
-import 'package:mobx/mobx.dart';
-import 'controller.dart';
 
-class MyHomePage extends StatelessWidget {
-  final controller = Controller();
-
+class MyHomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MobX'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(40),
-              child: TextField(
-                decoration: InputDecoration(labelText: 'Nome'),
-                onChanged: controller.mudarNome,
-              ),
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+    final controller = Controller(); 
+
+    _textField({labelText, onChanged, errorText}) {
+        return TextField(
+            onChanged: onChanged,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: labelText,
+                errorText: errorText == null ? null : errorText(),
             ),
-            Padding(
-              padding: EdgeInsets.all(40),
-              child: TextField(
-                decoration: InputDecoration(labelText: 'Sobrenome'),
-                onChanged: controller.mudarSobrenome,
-              ),
+        );
+    }
+
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+            appBar: AppBar(
+            title: Text('MobX'),
             ),
-            Observer(builder: (_) {
-              return Text('${controller.nomecompleto}');
-            },)
-          ],
-        ),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {controller.increment();},
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+            body: Padding (
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    children: <Widget>[
+                        Observer(builder: (_) {
+                            return _textField(
+                                labelText: "name", 
+                                onChanged: controller.client.changeName,
+                                errorText: controller.validateName,
+                            );
+                        }),
+                        SizedBox(height: 30),
+                        Observer(builder: (_) {
+                            return _textField(
+                                labelText: "email", 
+                                onChanged: controller.client.changeEmail,
+                                errorText: controller.validateEmail,
+                            );
+                        }),
+                        SizedBox(height: 30),
+                        Observer(builder: (_) {
+                            return _textField(
+                                labelText: "cpf", 
+                                onChanged: controller.client.changeCpf,
+                                errorText: controller.validateCpf,
+                            );
+                        }),
+                        SizedBox(height: 50),
+                        Observer(
+                          builder: (_) {
+                              return ElevatedButton(
+                                onPressed: controller.isValid ? () {} : null, // habilita o botão apenas quando todos os campos estiverem preenchidos
+                                child: Text("Salvar"),
+                            );
+                          }
+                        )
+                    ],
+                ),
+            )
+        );
+    }
 }

@@ -1,25 +1,39 @@
+import 'package:fluttermobx/models/client.dart';
 import 'package:mobx/mobx.dart';
 part 'controller.g.dart';
 
-class Controller = ControllerBase with _$Controller;
+class Controller = _ControllerBase with _$Controller;
 
-abstract class ControllerBase with Store{
-  @observable
-  String nome = '';
-
-  @observable
-  String sobrenome = '';
+abstract class _ControllerBase with Store{
+  var client = Client();
 
   @computed
-  String get nomecompleto => "$nome $sobrenome";
-
-  @action
-  mudarNome(String newName) {
-    nome = newName;
+  bool get isValid {
+    return validateName() == null && validateEmail() == null && validateCpf() == null;
   }
 
-  @action
-  mudarSobrenome(String newName) {
-    sobrenome = newName;
+  validateName(){
+    if(client.name.isEmpty) {
+      return "Este campo é obrigatório";
+    }
+    return null;
+  }
+
+  validateEmail(){
+    if(client.email.isEmpty) {
+      return "Este campo é obrigatório";
+    } else if(!client.email.contains("@")) {
+      return "Esse não é um email válido";
+    }
+    return null;
+  }
+
+  validateCpf(){
+    if(client.cpf.isEmpty) {
+      return "Este campo é obrigatório";
+    } else if(client.cpf.length < 11) {
+      return "Esse não é um cpf válido";
+    }
+    return null;
   }
 }
