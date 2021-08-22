@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fluttermobx/controller.dart';
+import 'package:mobx/mobx.dart';
 import 'controller.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -16,23 +17,31 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            Padding(
+              padding: EdgeInsets.all(40),
+              child: TextField(
+                decoration: InputDecoration(labelText: 'Nome'),
+                onChanged: controller.mudarNome,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(40),
+              child: TextField(
+                decoration: InputDecoration(labelText: 'Sobrenome'),
+                onChanged: controller.mudarSobrenome,
+              ),
             ),
             Observer(builder: (_) {
-              return Text(
-                '${controller.counter}',
-                style: Theme.of(context).textTheme.headline4,
-              );
-            })
+              return Text('${controller.nomecompleto}');
+            },)
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {controller.increment();},
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {controller.increment();},
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.add),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
